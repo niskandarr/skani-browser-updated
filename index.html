@@ -805,9 +805,10 @@
     
     // ---- init WASM ----
      init({ module_or_path: './pkg/skani_browser_bg.wasm' }).then(async () => {
-      
-      try { await initThreadPool(navigator.hardwareConcurrency); } catch(e) { console.log("Parallelism not available, running single-threaded:", e.message); }
-      // initialise rayon thread pool using all available CPU threads
+       console.log('crossOriginIsolated:', crossOriginIsolated);
+  console.log('SharedArrayBuffer available:', typeof SharedArrayBuffer !== 'undefined');
+  await initThreadPool(navigator.hardwareConcurrency);
+  console.log("thread pool ready"); // only then do anything else      // initialise rayon thread pool using all available CPU threads
 
       setStatus(document.getElementById('dist-status'), 'Ready');
       setStatus(document.getElementById('tri-status'), 'Ready');

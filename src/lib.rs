@@ -1,3 +1,5 @@
+#![cfg_attr(target_arch = "wasm32", feature(stdarch_wasm_atomic_wait))]
+
 #[cfg(target_arch = "wasm32")]
 use skani::chain;
 #[cfg(target_arch = "wasm32")]
@@ -168,8 +170,9 @@ pub fn compare_triangle(
     c: u32,
     marker_c: u32,
 ) -> String {
-    let threads = rayon::current_num_threads();
-    console::log_1(&format!("rayon threads: {}", threads).into());
+    rayon::spawn(|| {}); // force pool init
+let threads = rayon::current_num_threads();
+console::log_1(&format!("rayon threads: {}", threads).into());
     console_error_panic_hook::set_once();
  
     if fastas.len() < 2 {

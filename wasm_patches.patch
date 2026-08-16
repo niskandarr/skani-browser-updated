@@ -1,0 +1,75 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index a9215d5..5ebed07 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -23,11 +23,11 @@ thiserror = "1.0"
+ bio = "1"
+ rand = "0.8.3"
+ fxhash = "0"
+-partitions = { git = "https://github.com/bluenote-1577/partitions.git" }
++partitions = { git = "https://github.com/nadiaaiskandar/partitions.git" }
+ #partitions = "0.2"
+ num-traits = "0"
+-needletail = "0.5"
+-simple-logging= "2"
++needletail = { version = "0.5", default-features = false }
++
+ log = "0.4"
+ rayon = "1.5"
+ smallvec = { version = "1", features = ["union","serde","write"] }
+diff --git a/src/parse.rs b/src/parse.rs
+index d25932c..b6d9eac 100644
+--- a/src/parse.rs
++++ b/src/parse.rs
+@@ -42,11 +42,14 @@ pub fn parse_params(matches: &ArgMatches) -> (SketchParams, CommandParams) {
+         .build_global()
+         .unwrap();
+ 
++#[cfg(not(target_arch = "wasm32"))]
+     simple_logging::log_to_stderr(LevelFilter::Info);
+     if matches_subc.is_present("v") {
++#[cfg(not(target_arch = "wasm32"))]
+         simple_logging::log_to_stderr(LevelFilter::Debug);
+     }
+     if matches_subc.is_present("trace") {
++#[cfg(not(target_arch = "wasm32"))]
+         simple_logging::log_to_stderr(LevelFilter::Trace);
+     }
+ 
+@@ -515,11 +518,14 @@ fn setup_logging_and_threads(threads: &str, debug: bool, trace: bool) {
+         .build_global()
+         .unwrap();
+ 
++#[cfg(not(target_arch = "wasm32"))]
+     simple_logging::log_to_stderr(LevelFilter::Info);
+     if debug {
++#[cfg(not(target_arch = "wasm32"))]
+         simple_logging::log_to_stderr(LevelFilter::Debug);
+     }
+     if trace {
++#[cfg(not(target_arch = "wasm32"))]
+         simple_logging::log_to_stderr(LevelFilter::Trace);
+     }
+ }
+@@ -662,7 +668,7 @@ fn parse_dist_args(args: &DistArgs) -> (SketchParams, CommandParams) {
+ 
+     let max_results = args.n.as_ref()
+         .map(|s| s.parse::<usize>().unwrap())
+-        .unwrap_or(1000000000000);
++        .unwrap_or(usize::MAX);
+ 
+     let def_k = if amino_acid { DEFAULT_K_AAI } else { DEFAULT_K };
+     let def_c = if amino_acid { DEFAULT_C_AAI } else { DEFAULT_C };
+diff --git a/src/types.rs b/src/types.rs
+index fe5e200..428c105 100644
+--- a/src/types.rs
++++ b/src/types.rs
+@@ -110,7 +110,7 @@ pub fn mm_hash_bytes_32(bytes: &[u8]) -> usize {
+ 
+ #[inline]
+ pub fn mm_hash(bytes: &[u8]) -> usize {
+-    let mut key = usize::from_ne_bytes(bytes.try_into().unwrap());
++    let mut key = u64::from_ne_bytes(bytes.try_into().unwrap()) as usize;
+     key = !key.wrapping_add(key << 21); // key = (key << 21) - key - 1;
+     key = key ^ key >> 24;
+     key = (key.wrapping_add(key << 3)).wrapping_add(key << 8); // key * 265

@@ -658,8 +658,8 @@
 
   <script type="module">
 
-    import init, { compare_genomes, compare_triangle, initThreadPool } from './pkg/skani_browser.js';
-  //  import init, { compare_genomes, compare_triangle, initThreadPool } from './pkg/skani_browser.js';
+    import init, { compare_genomes, compare_triangle } from './pkg/skani_browser.js';
+  //  import init, { compare_genomes, compare_triangle } from './pkg/skani_browser.js';
 
     // ---- state ----
     let fileA = null, fileB = null;
@@ -807,7 +807,6 @@
      init({ module_or_path: './pkg/skani_browser_bg.wasm' }).then(async () => {
        console.log('crossOriginIsolated:', crossOriginIsolated);
   console.log('SharedArrayBuffer available:', typeof SharedArrayBuffer !== 'undefined');
-  await initThreadPool(navigator.hardwareConcurrency);
   console.log("thread pool ready"); // only then do anything else      // initialise rayon thread pool using all available CPU threads
 
       setStatus(document.getElementById('dist-status'), 'Ready');

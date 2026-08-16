@@ -1,33 +1,10 @@
-#![cfg_attr(target_arch = "wasm32", feature(stdarch_wasm_atomic_wait))]
-
-#[cfg(target_arch = "wasm32")]
 use skani::chain;
-#[cfg(target_arch = "wasm32")]
 use skani::screen;
-#[cfg(target_arch = "wasm32")]
 use skani::seeding;
-#[cfg(target_arch = "wasm32")]
 use skani::regression;
-#[cfg(target_arch = "wasm32")]
 use skani::params;
-#[cfg(target_arch = "wasm32")]
 use skani::types;
 
-// WASM entry point (TESTING)
-#[cfg(target_arch = "wasm32")]
-use wasm_bindgen::prelude::*;
-#[cfg(target_arch = "wasm32")]
-use std::io::Cursor;
-#[cfg(target_arch = "wasm32")]
-use needletail::parse_fastx_reader;
-#[cfg(target_arch = "wasm32")]
-use rayon::prelude::*;
-#[cfg(target_arch = "wasm32")]
-use std::sync::Mutex;
-#[cfg(target_arch = "wasm32")]
-
-#[cfg(target_arch = "wasm32")]
-pub use wasm_bindgen_rayon::init_thread_pool;
 
 #[cfg(target_arch = "wasm32")]
 fn fasta_string_to_sketch(fasta: &str, sketch_params: &params::SketchParams) -> Option<types::Sketch> {
@@ -59,9 +36,6 @@ fn fasta_string_to_sketch(fasta: &str, sketch_params: &params::SketchParams) -> 
     }
     if j > 0 { Some(new_sketch) } else { None }
 }
-
-
-
 
 #[cfg(target_arch = "wasm32")]
 use web_sys::console;
